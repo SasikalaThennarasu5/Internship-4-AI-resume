@@ -95,7 +95,7 @@ export default function Login({ onClose, openRegister }) {
           onSuccess={async (credentialResponse) => {
             try {
               const res = await axios.post(
-                "http://127.0.0.1:8000/api/auth/google/",
+                "https://internship-4-ai-resume-5.onrender.com/api/auth/google/",
                 {
                   token: credentialResponse.credential,
                 }

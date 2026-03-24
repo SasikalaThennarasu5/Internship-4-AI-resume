@@ -1,4 +1,4 @@
 import axios from "axios";
 
 export const getSteps = () =>
-  axios.get("http://127.0.0.1:8000/api/steps/");
+  axios.get("https://internship-4-ai-resume-5.onrender.com/api/steps/");

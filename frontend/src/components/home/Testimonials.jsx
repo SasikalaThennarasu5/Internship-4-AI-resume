@@ -68,7 +68,7 @@ export default function Testimonials() {
           {/* USER */}
           <div className="flex items-center justify-center gap-3">
             <img
-              src={`http://127.0.0.1:8000${current.image}`}
+              src={`https://internship-4-ai-resume-5.onrender.com${current.image}`}
               className="w-10 h-10 rounded-full object-cover"
             />
             <div className="text-left">

@@ -44,7 +44,7 @@ export default function TemplatesPreview() {
 
             {/* IMAGE */}
             <img
-              src={`http://127.0.0.1:8000${t.image}`}
+              src={`https://internship-4-ai-resume-5.onrender.com${t.image}`}
               alt={t.name}
               className="rounded-lg h-72 w-full object-cover"
             />
