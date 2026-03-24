@@ -68,9 +68,10 @@ export default function Testimonials() {
           {/* USER */}
           <div className="flex items-center justify-center gap-3">
             <img
-              src={`https://internship-4-ai-resume-5.onrender.com${current.image}`}
-              className="w-10 h-10 rounded-full object-cover"
-            />
+  src={current.image}
+  onError={(e) => (e.target.src = "/default-avatar.png")}
+  className="w-10 h-10 rounded-full object-cover"
+/>
             <div className="text-left">
               <p className="font-semibold">{current.name}</p>
               <p className="text-sm text-gray-500">
