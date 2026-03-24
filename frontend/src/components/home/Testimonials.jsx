@@ -18,84 +18,111 @@ export default function Testimonials() {
     }
   };
 
-  // AUTO SLIDE
+  // AUTO SLIDE (safe)
   useEffect(() => {
+    if (!data.length) return;
+
     const timer = setInterval(() => {
       setIndex((prev) => (prev + 1) % data.length);
-    }, 3000);
+    }, 3500);
 
     return () => clearInterval(timer);
   }, [data]);
 
-  if (!data.length) return null;
-
-  const current = data[index];
+  if (!data.length || !data[index]) return null;
 
   return (
-    <div className="py-20 text-center bg-gradient-to-r from-purple-300 to-purple-500 text-white relative overflow-hidden">
+    <div className="py-24 text-center bg-gradient-to-r from-purple-400 to-purple-600 text-white relative overflow-hidden">
 
       {/* TITLE */}
-      <h2 className="text-3xl font-bold mb-2">
+      <h2 className="text-4xl font-bold mb-2">
         What Our Users Say
       </h2>
-      <p className="text-sm opacity-90 mb-10">
+      <p className="text-sm opacity-90 mb-14">
         Join thousands of happy job seekers
       </p>
 
-      {/* STACK EFFECT */}
-      <div className="relative flex justify-center items-center">
+      {/* SLIDER CONTAINER */}
+      <div className="relative flex justify-center items-center h-[320px]">
 
-        {/* BACK CARDS */}
-        <div className="absolute w-96 h-64 bg-white opacity-30 rounded-xl rotate-6"></div>
-        <div className="absolute w-96 h-64 bg-white opacity-50 rounded-xl -rotate-6"></div>
+        {/* BACK CARDS (STACK EFFECT) */}
+        <div className="absolute w-[380px] h-[240px] bg-white/20 rounded-2xl rotate-6 blur-sm"></div>
+        <div className="absolute w-[380px] h-[240px] bg-white/30 rounded-2xl -rotate-6 blur-sm"></div>
 
-        {/* MAIN CARD */}
-        <div className="bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.2),transparent)] text-black p-8 rounded-xl shadow-xl w-96 z-10 transition-all duration-500">
+        {/* SLIDES */}
+        <div className="relative w-[380px] h-[260px] overflow-hidden">
 
-          {/* QUOTE ICON */}
-          <div className="text-3xl text-orange-400 mb-2">❝</div>
+          {data.map((item, i) => {
+            let position =
+              "translate-x-full opacity-0 scale-90 rotate-6";
 
-          {/* RATING */}
-          <div className="text-yellow-500 mb-3">
-            {"★".repeat(current.rating)}
-          </div>
+            if (i === index) {
+              position =
+                "translate-x-0 opacity-100 scale-100 rotate-0 z-10";
+            } else if (
+              i === (index - 1 + data.length) % data.length
+            ) {
+              position =
+                "-translate-x-full opacity-0 scale-90 -rotate-6";
+            }
 
-          {/* MESSAGE */}
-          <p className="text-gray-600 mb-6">
-            "{current.message}"
-          </p>
+            return (
+              <div
+                key={i}
+                className={`absolute top-0 left-0 bg-white/90 backdrop-blur-md text-black p-8 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] w-full h-full
+                transition-all duration-700 ease-in-out ${position}`}
+              >
+                {/* QUOTE */}
+                <div className="text-4xl text-orange-400 mb-3">❝</div>
 
-          {/* USER */}
-          <div className="flex items-center justify-center gap-3">
-            <img
-  src={current.image}
-  onError={(e) => (e.target.src = "/default-avatar.png")}
-  className="w-10 h-10 rounded-full object-cover"
-/>
-            <div className="text-left">
-              <p className="font-semibold">{current.name}</p>
-              <p className="text-sm text-gray-500">
-                {current.role}
-              </p>
-            </div>
-          </div>
+                {/* RATING */}
+                <div className="text-yellow-500 mb-3 tracking-wide">
+                  {"★".repeat(item?.rating || 0)}
+                </div>
 
+                {/* MESSAGE */}
+                <p className="text-gray-600 mb-6 text-sm leading-relaxed">
+                  "{item.message}"
+                </p>
+
+                {/* USER */}
+                <div className="flex items-center justify-center gap-3">
+                  <img
+                    src={item.image}
+                    onError={(e) =>
+                      (e.target.src = "/default-avatar.png")
+                    }
+                    className="w-11 h-11 rounded-full object-cover border-2 border-white shadow"
+                  />
+                  <div className="text-left">
+                    <p className="font-semibold text-gray-800">
+                      {item.name}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {item.role}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
 
-      {/* CONTROLS */}
-      <div className="mt-6 flex justify-center gap-2">
+      {/* DOT CONTROLS */}
+      <div className="mt-10 flex justify-center gap-3">
         {data.map((_, i) => (
           <div
             key={i}
             onClick={() => setIndex(i)}
-            className={`w-3 h-3 rounded-full cursor-pointer ${
-              i === index ? "bg-white" : "bg-white/50"
+            className={`h-3 rounded-full cursor-pointer transition-all duration-300 ${
+              i === index
+                ? "w-6 bg-white"
+                : "w-3 bg-white/50"
             }`}
           />
         ))}
       </div>
-
     </div>
   );
 }
