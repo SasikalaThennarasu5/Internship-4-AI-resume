@@ -1,40 +1,94 @@
-export default function SectionsPanel() {
+import { useState } from "react";
+
+export default function SectionsPanel({ data, updateData }) {
+
+  const toggleSection = (key) => {
+    updateData({
+      sections: {
+        ...data.sections,
+        [key]: !data.sections[key],
+      },
+    });
+  };
+
+  const addCustomSection = (name) => {
+    if (!name.trim()) return;
+
+    updateData({
+      sections: {
+        ...data.sections,
+        custom: [...(data.sections.custom || []), name],
+      },
+    });
+  };
+
   return (
     <div className="space-y-4">
 
       <label className="flex gap-2">
-        <input type="checkbox" defaultChecked />
-        Personal Details
+        <input
+          type="checkbox"
+          checked={data.sections?.certificates}
+          onChange={() => toggleSection("certificates")}
+        />
+        Certificates
       </label>
-
-      {["Certificates","Experience","Languages","Interest"].map((s) => (
-        <label key={s} className="flex gap-2">
-          <input type="checkbox" /> {s}
-        </label>
-      ))}
 
       <label className="flex gap-2">
-        <input type="checkbox" />
-        Portfolio / Links
+        <input
+          type="checkbox"
+          checked={data.sections?.languages}
+          onChange={() => toggleSection("languages")}
+        />
+        Languages
       </label>
 
-      <div>
-        <p className="mt-4 mb-1">Add your own</p>
+      <label className="flex gap-2">
         <input
-          placeholder="Hobbies"
-          className="w-full border p-2 rounded"
+          type="checkbox"
+          checked={data.sections?.interests}
+          onChange={() => toggleSection("interests")}
         />
-      </div>
+        Interests
+      </label>
 
-      <div className="flex gap-2">
-        <button className="bg-orange-400 text-white px-4 py-2 rounded">
-          Cancel
-        </button>
+      <label className="flex gap-2">
+        <input
+          type="checkbox"
+          checked={data.sections?.portfolio}
+          onChange={() => toggleSection("portfolio")}
+        />
+        Portfolio
+      </label>
 
-        <button className="bg-primary text-white px-4 py-2 rounded">
-          Add Section
-        </button>
-      </div>
+      {/* ADD CUSTOM */}
+      <CustomSectionInput addCustomSection={addCustomSection} />
+
+    </div>
+  );
+}
+
+function CustomSectionInput({ addCustomSection }) {
+  const [value, setValue] = useState("");
+
+  return (
+    <div>
+      <input
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        placeholder="Add custom section"
+        className="w-full border p-2 rounded"
+      />
+
+      <button
+        onClick={() => {
+          addCustomSection(value);
+          setValue("");
+        }}
+        className="mt-2 bg-primary text-white px-4 py-2 rounded"
+      >
+        Add Section
+      </button>
     </div>
   );
 }

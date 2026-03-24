@@ -7,9 +7,11 @@ function Footer() {
 
         {/* LOGO + DESC */}
         <div>
-          <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-            📄 <span>VetriSmartCV</span>
-          </h2>
+          <img
+            src="/images/logo.png"
+            alt="logo"
+            className="w-50 h-50 object-contain"
+          />
           <p className="text-sm text-white/80 leading-relaxed">
             Create professional resumes with AI-powered suggestions in minutes.
           </p>

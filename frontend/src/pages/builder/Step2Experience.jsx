@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-export default function Step2Experience({ next, back, updateData }) {
-  const [selected, setSelected] = useState("");
+export default function Step2Experience({ next, back, updateData, data }) {
+  const [selected, setSelected] = useState(data?.experienceLevel || "");
 
   const levels = [
     {

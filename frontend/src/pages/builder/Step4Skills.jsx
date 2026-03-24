@@ -4,61 +4,72 @@ export default function Step4Skills({ next, back, updateData, data }) {
   const [skill, setSkill] = useState("");
   const [skills, setSkills] = useState([]);
 
-  // 🔥 ROLE-BASED SMART SUGGESTIONS (no API)
-  const skillMap = {
-    "UI Designer": [
-      "Figma",
-      "Adobe XD",
-      "Wireframing",
-      "Prototyping",
-      "User Research",
-      "UI Design",
-    ],
-    "Software Developer": [
-      "JavaScript",
-      "React",
-      "Node.js",
-      "Git",
-      "REST API",
-      "MongoDB",
-    ],
-    "Marketing Executive": [
-      "SEO",
-      "Social Media Marketing",
-      "Content Writing",
-      "Google Ads",
-      "Email Marketing",
-    ],
-    "Data Analyst": [
-      "Excel",
-      "SQL",
-      "Python",
-      "Power BI",
-      "Data Visualization",
-    ],
-    "Customer Support": [
-      "Communication",
-      "Problem Solving",
-      "CRM Tools",
-      "Customer Handling",
-    ],
+  // 🔥 SKILL DATABASE (acts like AI brain)
+  const skillDatabase = {
+    frontend: ["React", "HTML", "CSS", "JavaScript", "Tailwind", "Redux"],
+    backend: ["Node.js", "Django", "REST API", "MongoDB", "SQL", "Express"],
+    design: ["Figma", "Adobe XD", "UI Design", "UX Research", "Wireframing"],
+    data: ["Python", "SQL", "Excel", "Power BI", "Data Visualization"],
+    marketing: ["SEO", "Google Ads", "Content Writing", "Email Marketing"],
+    support: ["Communication", "CRM Tools", "Problem Solving"],
+    general: ["Teamwork", "Leadership", "Time Management"],
   };
 
-  const suggestions = skillMap[data?.role] || [
-    "Communication",
-    "Teamwork",
-    "Problem Solving",
-  ];
+  // 🔥 AI-LIKE ROLE MATCHING
+  const getAISkills = (role) => {
+    if (!role) return skillDatabase.general;
 
-  // ADD SKILL
+    const r = role.toLowerCase();
+
+    if (
+      r.includes("dev") ||
+      r.includes("engineer") ||
+      r.includes("programmer")
+    ) {
+      return [
+        ...new Set([
+          ...skillDatabase.frontend,
+          ...skillDatabase.backend,
+        ]),
+      ];
+    }
+
+    if (r.includes("designer") || r.includes("ui") || r.includes("ux")) {
+      return skillDatabase.design;
+    }
+
+    if (r.includes("data") || r.includes("analyst")) {
+      return skillDatabase.data;
+    }
+
+    if (r.includes("marketing")) {
+      return skillDatabase.marketing;
+    }
+
+    if (r.includes("support")) {
+      return skillDatabase.support;
+    }
+
+    return skillDatabase.general;
+  };
+
+  // 🔥 FINAL SUGGESTIONS (filtered + limited)
+  const suggestions = getAISkills(data?.role)
+    .filter((s) => !skills.includes(s))
+    .slice(0, 6);
+
+  // ➕ ADD SKILL (no duplicates, case-safe)
   const addSkill = (value) => {
-    if (value && !skills.includes(value)) {
+    if (
+      value &&
+      !skills.some((s) => s.toLowerCase() === value.toLowerCase())
+    ) {
       setSkills([...skills, value]);
     }
     setSkill("");
   };
 
-  // REMOVE SKILL
+  // ❌ REMOVE SKILL
   const removeSkill = (value) => {
     setSkills(skills.filter((s) => s !== value));
   };
@@ -66,6 +77,7 @@ export default function Step4Skills({ next, back, updateData, data }) {
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6">
 
+      {/* HEADER */}
       <h1 className="text-4xl font-bold mb-2 text-center">
         Let’s <span className="text-primary">Build Your Resume</span>
       </h1>
@@ -101,37 +113,46 @@ export default function Step4Skills({ next, back, updateData, data }) {
             <span
               key={i}
               onClick={() => removeSkill(s)}
-              className="bg-primary text-white px-3 py-1 rounded-full text-sm cursor-pointer"
+              className="bg-primary text-white px-3 py-1 rounded-full text-sm cursor-pointer hover:scale-105 transition"
             >
               {s} ✕
             </span>
           ))}
         </div>
 
-        {/* AI SUGGESTION */}
+        {/* AI SUGGESTIONS */}
         <p className="text-primary text-sm mb-3 text-left">
-          ✨ Smart Suggestions
+          ✨ Smart Suggestions {data?.role && `(for ${data.role})`}
         </p>
 
-        <div className="text-left space-y-2 text-gray-700">
-          {suggestions.map((item, i) => (
-            <p
-              key={i}
-              className="cursor-pointer hover:text-primary"
-              onClick={() => addSkill(item)}
-            >
-              {item}
+        <div className="flex flex-wrap gap-2">
+          {suggestions.length > 0 ? (
+            suggestions.map((item, i) => (
+              <span
+                key={i}
+                onClick={() => addSkill(item)}
+                className="bg-gray-200 px-3 py-1 rounded-full text-sm cursor-pointer hover:bg-primary hover:text-white transition-all duration-200 hover:scale-105"
+              >
+                {item}
+              </span>
+            ))
+          ) : (
+            <p className="text-gray-400 text-sm">
+              All suggested skills added ✅
             </p>
-          ))}
+          )}
         </div>
 
         {/* BUTTONS */}
         <div className="flex justify-between gap-4 mt-10">
-          <button onClick={back} className="flex-1 border rounded py-2">
+          <button
+            onClick={back}
+            className="flex-1 border rounded py-2 hover:bg-gray-50"
+          >
             Back
           </button>
 
-          <button className="flex-1 border rounded py-2">
+          <button className="flex-1 border rounded py-2 hover:bg-gray-50">
             💾 Save as draft
           </button>
 
@@ -140,7 +161,7 @@ export default function Step4Skills({ next, back, updateData, data }) {
               updateData({ skills });
               next();
             }}
-            className="flex-1 bg-secondary text-white rounded py-2"
+            className="flex-1 bg-secondary text-white rounded py-2 hover:opacity-90"
           >
             Next
           </button>

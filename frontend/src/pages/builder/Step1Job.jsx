@@ -2,16 +2,26 @@ import { useState } from "react";
 
 export default function Step1Job({ next, back, updateData }) {
   const [role, setRole] = useState("");
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   const suggestions = [
     "UI Designer",
-    "Software Developer",
-    "Marketing Executive",
+    "UX Designer",
+    "Frontend Developer",
+    "Backend Developer",
+    "Full Stack Developer",
+    "Software Engineer",
     "Data Analyst",
-    "Customer Support",
+    "Data Scientist",
+    "Machine Learning Engineer",
+    "Marketing Executive",
+    "Digital Marketing Specialist",
+    "SEO Analyst",
+    "Product Manager",
+    "Business Analyst",
+    "Customer Support Executive",
   ];
 
-  // 🔥 Smart filtering (AI-like behavior)
   const filteredSuggestions = suggestions.filter((item) =>
     item.toLowerCase().includes(role.toLowerCase())
   );
@@ -35,22 +45,6 @@ export default function Step1Job({ next, back, updateData }) {
         <div className="h-2 bg-gray-200 rounded-full">
           <div className="h-2 bg-primary w-[15%] rounded-full"></div>
         </div>
-
-        {/* STEP NUMBERS */}
-        <div className="flex justify-between mt-4 text-sm">
-          {[1, 2, 3, 4, 5, 6, 7].map((num, i) => (
-            <div key={i} className="flex flex-col items-center">
-              <div
-                className={`w-6 h-6 flex items-center justify-center rounded-full text-white text-xs ${
-                  num === 1 ? "bg-green-500" : "bg-gray-300"
-                }`}
-              >
-                {num}
-              </div>
-              <div className="w-10 h-[2px] bg-gray-300 mt-1"></div>
-            </div>
-          ))}
-        </div>
       </div>
 
       {/* CARD */}
@@ -60,11 +54,11 @@ export default function Step1Job({ next, back, updateData }) {
           What job are you applying for?
         </h2>
 
-        {/* SEARCH INPUT */}
-        <div className="relative mb-6">
+        {/* INPUT */}
+        <div className="relative mb-4">
           <input
             type="text"
-            placeholder="Search here"
+            placeholder="Search job role..."
             value={role}
             onChange={(e) => setRole(e.target.value)}
             className="w-full bg-gray-100 px-10 py-3 rounded-full outline-none"
@@ -72,33 +66,58 @@ export default function Step1Job({ next, back, updateData }) {
           <span className="absolute left-3 top-3 text-gray-400">🔍</span>
         </div>
 
-        {/* AI SUGGESTION */}
-        <p className="text-primary text-sm mb-3">✨ AI Suggestion</p>
+        {/* AI BUTTON */}
+        <div className="flex justify-between items-center mb-3">
+          <p
+            onClick={() => setShowSuggestions(!showSuggestions)}
+            className="text-primary text-sm cursor-pointer hover:underline"
+          >
+            ✨ AI Suggestions
+          </p>
 
-        {/* LIST */}
-        <div className="space-y-2 text-gray-700">
-          {filteredSuggestions.length > 0 ? (
-            filteredSuggestions.map((item, i) => (
-              <p
-                key={i}
-                onClick={() => setRole(item)}
-                className={`cursor-pointer px-2 py-1 rounded ${
-                  role === item
-                    ? "bg-primary text-white"
-                    : "hover:text-primary"
-                }`}
-              >
-                {item}
-              </p>
-            ))
-          ) : (
-            <p className="text-gray-400">No suggestions found</p>
+          {showSuggestions && (
+            <p
+              onClick={() => setShowSuggestions(false)}
+              className="text-xs text-gray-400 cursor-pointer"
+            >
+              Close
+            </p>
           )}
         </div>
 
+        {/* DROPDOWN LIST */}
+        {showSuggestions && (
+          <div className="max-h-40 overflow-y-auto border rounded-lg p-2 bg-gray-50 shadow-inner space-y-1">
+
+            {filteredSuggestions.length > 0 ? (
+              filteredSuggestions.map((item, i) => (
+                <p
+                  key={i}
+                  onClick={() => {
+                    setRole(item);
+                    setShowSuggestions(false); // auto close
+                  }}
+                  className={`cursor-pointer px-3 py-2 rounded transition ${
+                    role === item
+                      ? "bg-primary text-white"
+                      : "hover:bg-primary/10"
+                  }`}
+                >
+                  {item}
+                </p>
+              ))
+            ) : (
+              <p className="text-gray-400 px-2 py-1">
+                No suggestions found
+              </p>
+            )}
+
+          </div>
+        )}
+
         {/* BUTTONS */}
         <div className="flex justify-between mt-10 gap-4">
-          
+
           <button
             onClick={back}
             className="flex-1 border rounded py-2 hover:bg-gray-50"
@@ -106,7 +125,7 @@ export default function Step1Job({ next, back, updateData }) {
             Back
           </button>
 
-          <button className="flex-1 border rounded py-2 hover:bg-gray-50 flex items-center justify-center gap-2">
+          <button className="flex-1 border rounded py-2 hover:bg-gray-50">
             💾 Save as draft
           </button>
 

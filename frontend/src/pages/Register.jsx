@@ -125,19 +125,10 @@ export default function Register({ onClose, openLogin }) {
         </div>
 
         {/* RIGHT SIDE */}
-        <div className="hidden md:flex w-1/2 bg-gradient-to-br from-[#7b5cff] to-[#6C3BFF] items-center justify-center relative">
-
-          <p className="text-white text-lg font-semibold text-center px-6">
-            Build your resume with AI ✨
-          </p>
-
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 bg-white/90 rounded-full w-9 h-9 flex items-center justify-center shadow hover:scale-105 transition"
-          >
-            ✕
-          </button>
-        </div>
+        <img
+  src="/auth-illustration.png"
+  className="w-72 opacity-90"
+/>
 
       </div>
     </div>

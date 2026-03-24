@@ -32,7 +32,25 @@ export default function Testimonials() {
   if (!data.length || !data[index]) return null;
 
   return (
-    <div className="py-24 text-center bg-gradient-to-r from-purple-400 to-purple-600 text-white relative overflow-hidden">
+    <div className="relative py-24 text-center text-white overflow-hidden">
+
+  {/* 🖼 BACKGROUND IMAGE */}
+  <div className="absolute inset-0">
+    <img
+      src="/images/bg.png"
+      alt="background"
+      className="w-full h-full object-cover"
+    />
+  </div>
+
+  {/* 🎨 PURPLE OVERLAY (IMPORTANT for readability) */}
+  <div className="absolute inset-0 bg-gradient-to-r from-purple-500/80 to-purple-700/80"></div>
+
+  {/* ✨ OPTIONAL SOFT GLOW */}
+  <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(255,255,255,0.1),transparent_70%)]"></div>
+
+  {/* CONTENT */}
+  <div className="relative z-10"></div>
 
       {/* TITLE */}
       <h2 className="text-4xl font-bold mb-2">
@@ -43,71 +61,78 @@ export default function Testimonials() {
       </p>
 
       {/* SLIDER CONTAINER */}
-      <div className="relative flex justify-center items-center h-[320px]">
+<div className="relative flex justify-center items-center h-[360px]">
 
-        {/* BACK CARDS (STACK EFFECT) */}
-        <div className="absolute w-[380px] h-[240px] bg-white/20 rounded-2xl rotate-6 blur-sm"></div>
-        <div className="absolute w-[380px] h-[240px] bg-white/30 rounded-2xl -rotate-6 blur-sm"></div>
+  {/* STACKED PAPERS BEHIND */}
+  <div className="absolute w-[420px] h-[260px] bg-white rotate-6 shadow-md"></div>
+  <div className="absolute w-[420px] h-[260px] bg-white -rotate-6 shadow-md"></div>
 
-        {/* SLIDES */}
-        <div className="relative w-[380px] h-[260px] overflow-hidden">
+  {/* MAIN SLIDER */}
+  <div className="relative w-[420px] h-[280px] overflow-hidden">
 
-          {data.map((item, i) => {
-            let position =
-              "translate-x-full opacity-0 scale-90 rotate-6";
+    {data.map((item, i) => {
+      let position =
+        "translate-x-full opacity-0 scale-90";
 
-            if (i === index) {
-              position =
-                "translate-x-0 opacity-100 scale-100 rotate-0 z-10";
-            } else if (
-              i === (index - 1 + data.length) % data.length
-            ) {
-              position =
-                "-translate-x-full opacity-0 scale-90 -rotate-6";
-            }
+      if (i === index) {
+        position =
+          "translate-x-0 opacity-100 scale-100 z-10";
+      } else if (
+        i === (index - 1 + data.length) % data.length
+      ) {
+        position =
+          "-translate-x-full opacity-0 scale-90";
+      }
 
-            return (
-              <div
-                key={i}
-                className={`absolute top-0 left-0 bg-white/90 backdrop-blur-md text-black p-8 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] w-full h-full
-                transition-all duration-700 ease-in-out ${position}`}
-              >
-                {/* QUOTE */}
-                <div className="text-4xl text-orange-400 mb-3">❝</div>
+      return (
+        <div
+          key={i}
+          className={`absolute top-0 left-0 w-full h-full 
+          bg-white text-black p-10 shadow-xl
+          transition-all duration-700 ease-in-out ${position}`}
 
-                {/* RATING */}
-                <div className="text-yellow-500 mb-3 tracking-wide">
-                  {"★".repeat(item?.rating || 0)}
-                </div>
+          /* ✂️ PAPER SHAPE */
+          style={{
+            clipPath:
+              "polygon(5% 0%, 95% 0%, 100% 20%, 95% 100%, 5% 100%, 0% 20%)",
+          }}
+        >
+          {/* QUOTE */}
+          <div className="text-4xl text-orange-400 mb-4">❝</div>
 
-                {/* MESSAGE */}
-                <p className="text-gray-600 mb-6 text-sm leading-relaxed">
-                  "{item.message}"
-                </p>
+          {/* RATING */}
+          <div className="text-yellow-500 mb-4 tracking-widest text-lg">
+            {"★".repeat(item?.rating || 0)}
+          </div>
 
-                {/* USER */}
-                <div className="flex items-center justify-center gap-3">
-                  <img
-                    src={item.image}
-                    onError={(e) =>
-                      (e.target.src = "/default-avatar.png")
-                    }
-                    className="w-11 h-11 rounded-full object-cover border-2 border-white shadow"
-                  />
-                  <div className="text-left">
-                    <p className="font-semibold text-gray-800">
-                      {item.name}
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      {item.role}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+          {/* MESSAGE */}
+          <p className="text-gray-700 mb-6 text-sm leading-relaxed">
+            "{item.message}"
+          </p>
+
+          {/* USER */}
+          <div className="flex items-center justify-center gap-3">
+            <img
+              src={item.image}
+              onError={(e) =>
+                (e.target.src = "/default-avatar.png")
+              }
+              className="w-12 h-12 rounded-full object-cover border-2 border-gray-200"
+            />
+            <div className="text-left">
+              <p className="font-semibold text-gray-800">
+                {item.name}
+              </p>
+              <p className="text-xs text-gray-500">
+                {item.role}
+              </p>
+            </div>
+          </div>
         </div>
-      </div>
+      );
+    })}
+  </div>
+</div>
 
       {/* DOT CONTROLS */}
       <div className="mt-10 flex justify-center gap-3">

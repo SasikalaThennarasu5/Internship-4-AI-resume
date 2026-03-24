@@ -20,3 +20,49 @@
 .animate-marquee:hover {
   animation-play-state: paused;
 }
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* 🌊 Smooth gradient movement (NOT aggressive) */
+@keyframes gradientMove {
+  0% {
+    background-position: 70% 20%;
+  }
+  50% {
+    background-position: 30% 40%;
+  }
+  100% {
+    background-position: 70% 20%;
+  }
+}
+
+.animate-gradientMove {
+  background-size: 200% 200%;
+  animation: gradientMove 12s ease-in-out infinite;
+}
+
+
+/* 🌊 Bottom curve slow movement */
+@keyframes waveSlow {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-40px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.animate-waveSlow {
+  animation: waveSlow 10s ease-in-out infinite;
+}

@@ -29,50 +29,59 @@ export default function Features() {
         </p>
       </div>
 
-      {/* GRID */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10 px-6 md:px-16">
-
-        {features.map((f, i) => (
-          <div
-            key={i}
-            className={`group relative bg-white p-6 pt-10 rounded-xl border border-gray-200 
-            shadow-sm transition-all duration-300 ease-in-out
-            hover:-translate-y-2 hover:shadow-[0_15px_30px_rgba(0,0,0,0.12)]
-            
-            ${i % 2 !== 0 ? "mt-6" : ""}`} // slight stagger
-          >
-
-            {/* ICON */}
-            <div className="absolute -top-7 left-6 transition-all duration-300 group-hover:scale-110">
-              <div className="bg-[#fde68a] p-2 rounded-full border-4 border-white shadow">
-                <img
-                  src={f.icon || "/default-icon.png"}
-                  onError={(e) => (e.target.src = "/default-icon.png")}
-                  className="w-9 h-9 rounded-full object-cover"
-                  alt=""
-                />
-              </div>
-            </div>
-
-            {/* CONTENT */}
-            <div className="text-left">
-              <h3 className="font-semibold text-gray-800 text-sm mb-2">
-                {f.title}
-              </h3>
-
-              <p className="text-xs text-gray-500 leading-relaxed">
-                {f.description}
-              </p>
-            </div>
-
-            {/* ORANGE BAR */}
-            <div className="mt-6">
-              <div className="h-2 bg-orange-400 rounded-full w-2/3 transition-all duration-300 group-hover:w-full"></div>
-            </div>
-
-          </div>
+      {/* ===== TOP ROW (2 CARDS) ===== */}
+      <div className="flex justify-center gap-10 mb-10 flex-wrap">
+        {features.slice(0, 2).map((f, i) => (
+          <Card key={i} f={f} />
         ))}
+      </div>
 
+      {/* ===== BOTTOM ROW (3 CARDS) ===== */}
+      <div className="flex justify-center gap-10 flex-wrap">
+        {features.slice(2, 5).map((f, i) => (
+          <Card key={i} f={f} />
+        ))}
+      </div>
+
+    </div>
+  );
+}
+
+/* 🔥 CARD COMPONENT (UI ONLY) */
+function Card({ f }) {
+  return (
+    <div
+      className="group relative bg-white w-[320px] p-6 pt-10 rounded-xl border border-gray-200 
+      shadow-sm transition-all duration-300 ease-in-out
+      hover:-translate-y-3 hover:shadow-[0_20px_40px_rgba(0,0,0,0.12)]"
+    >
+
+      {/* ICON */}
+      <div className="absolute -top-7 left-6 transition-all duration-300 group-hover:scale-110">
+        <div className="bg-[#fde68a] p-2 rounded-full border-4 border-white shadow">
+          <img
+            src={f.icon || "/default-icon.png"}
+            onError={(e) => (e.target.src = "/default-icon.png")}
+            className="w-9 h-9 rounded-full object-cover"
+            alt=""
+          />
+        </div>
+      </div>
+
+      {/* CONTENT */}
+      <div className="text-left">
+        <h3 className="font-semibold text-gray-800 text-sm mb-2">
+          {f.title}
+        </h3>
+
+        <p className="text-xs text-gray-500 leading-relaxed">
+          {f.description}
+        </p>
+      </div>
+
+      {/* ORANGE BAR */}
+      <div className="mt-6">
+        <div className="h-2 bg-orange-400 rounded-full w-2/3 transition-all duration-300 group-hover:w-full"></div>
       </div>
     </div>
   );

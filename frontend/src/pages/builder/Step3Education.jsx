@@ -1,16 +1,20 @@
 import { useState } from "react";
 
-export default function Step3Education({ next, back, updateData }) {
-  const [educations, setEducations] = useState([
-    {
-      university: "",
-      location: "",
-      degree: "",
-      field: "",
-      year: "",
-      cgpa: "",
-    },
-  ]);
+export default function Step3Education({ next, back, updateData, data }) {
+  const [educations, setEducations] = useState(
+    data?.education?.length
+      ? data.education
+      : [
+          {
+            university: "",
+            location: "",
+            degree: "",
+            field: "",
+            year: "",
+            cgpa: "",
+          },
+        ]
+  );
 
   // handle change
   const handleChange = (index, field, value) => {
@@ -102,18 +106,27 @@ export default function Step3Education({ next, back, updateData }) {
                 <option value="">Select Degree</option>
                 <option>B.E</option>
                 <option>B.Tech</option>
+                <option>B.Sc</option>
                 <option>M.E</option>
+                <option>M.Tech</option>
+                <option>MBA</option>
               </select>
 
               {/* Field */}
-              <input
-                placeholder="Field (ECE, IT...)"
+              <select
                 value={edu.field}
                 onChange={(e) =>
                   handleChange(index, "field", e.target.value)
                 }
                 className="bg-gray-100 p-3 rounded"
-              />
+              >
+                <option value="">Select Field</option>
+                <option>Computer Science</option>
+                <option>Information Technology</option>
+                <option>Electronics</option>
+                <option>Mechanical</option>
+                <option>Business</option>
+              </select>
 
               {/* Year */}
               <select
@@ -124,19 +137,28 @@ export default function Step3Education({ next, back, updateData }) {
                 className="bg-gray-100 p-3 rounded"
               >
                 <option value="">Select Year</option>
-                <option>2026</option>
-                <option>2025</option>
+                {Array.from({ length: 15 }, (_, i) => {
+                  const year = new Date().getFullYear() - i;
+                  return <option key={year}>{year}</option>;
+                })}
               </select>
 
               {/* CGPA */}
-              <input
-                placeholder="CGPA / %"
+              <select
                 value={edu.cgpa}
                 onChange={(e) =>
                   handleChange(index, "cgpa", e.target.value)
                 }
                 className="bg-gray-100 p-3 rounded"
-              />
+              >
+                <option value="">Select CGPA</option>
+                <option>10</option>
+                <option>9</option>
+                <option>8</option>
+                <option>7</option>
+                <option>6</option>
+              </select>
+
             </div>
           </div>
         ))}
@@ -169,6 +191,7 @@ export default function Step3Education({ next, back, updateData }) {
             Next
           </button>
         </div>
+
       </div>
     </div>
   );

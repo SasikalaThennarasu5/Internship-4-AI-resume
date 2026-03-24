@@ -5,7 +5,6 @@ import AuthModal from "../components/auth/AuthModal";
 export default function Navbar() {
   const navigate = useNavigate();
   const [openAuth, setOpenAuth] = useState(false);
-  
 
   const token = localStorage.getItem("token");
 
@@ -15,39 +14,71 @@ export default function Navbar() {
     navigate("/");
   };
 
-  const linkStyle = ({ isActive }) =>
-    isActive
-      ? "text-secondary font-semibold"
-      : "hover:text-gray-200";
-
   return (
     <>
-      <div className="flex justify-between items-center px-10 py-4 bg-gradient-to-r from-primary to-purple-600 text-white">
-        
+      <div className="flex justify-between items-center px-10 py-4 
+        bg-gradient-to-r from-indigo-700 via-purple-600 to-purple-700 
+        text-white shadow-md">
+
         {/* LOGO */}
-        <h1
-          className="text-xl font-bold cursor-pointer"
+        <div
+          className="flex items-center gap-2 cursor-pointer"
           onClick={() => navigate("/")}
         >
-          VetriSmartCV
-        </h1>
+          <img
+            src="/images/logo.png"
+            alt="logo"
+            className="w-50 h-50 object-contain"
+          />
+          
+        </div>
 
         {/* NAV LINKS */}
         <div className="flex gap-6 items-center">
-          
-          <NavLink to="/" className={linkStyle}>
+
+          {/* HOME */}
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              `px-4 py-1.5 rounded-md transition ${
+                isActive
+                  ? "bg-white text-black shadow"
+                  : "hover:text-gray-200"
+              }`
+            }
+          >
             Home
           </NavLink>
 
-          <NavLink to="/templates" className={linkStyle}>
+          {/* TEMPLATES */}
+          <NavLink
+            to="/templates"
+            className={({ isActive }) =>
+              `px-2 py-1.5 transition ${
+                isActive
+                  ? "text-white font-semibold"
+                  : "hover:text-gray-200"
+              }`
+            }
+          >
             Resume Templates
           </NavLink>
 
-          <NavLink to="/pricing" className={linkStyle}>
+          {/* PRICING */}
+          <NavLink
+            to="/pricing"
+            className={({ isActive }) =>
+              `px-2 py-1.5 transition ${
+                isActive
+                  ? "text-white font-semibold"
+                  : "hover:text-gray-200"
+              }`
+            }
+          >
             Pricing
           </NavLink>
 
-          {/* 🔐 AUTH BUTTON */}
+          {/* LOGIN / LOGOUT */}
           {token ? (
             <button
               onClick={handleLogout}
@@ -67,9 +98,13 @@ export default function Navbar() {
           {/* CTA BUTTON */}
           <button
             onClick={() => navigate("/builder")}
-            className="bg-secondary px-4 py-2 rounded hover:opacity-90"
+            className="flex items-center gap-2 
+            bg-gradient-to-r from-orange-400 to-orange-500 
+            px-5 py-2 rounded-md font-medium shadow-lg
+            transition-all duration-300 hover:scale-105 
+            hover:shadow-[0_10px_25px_rgba(255,165,0,0.5)]"
           >
-            Create My Resume
+            ⬆ Create My Resume
           </button>
         </div>
       </div>
@@ -79,10 +114,6 @@ export default function Navbar() {
         isOpen={openAuth}
         onClose={() => setOpenAuth(false)}
       />
-
-      
-      
-
     </>
   );
 }

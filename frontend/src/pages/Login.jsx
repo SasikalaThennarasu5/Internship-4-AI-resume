@@ -11,125 +11,122 @@ export default function Login({ onClose, openRegister }) {
 
   const handleLogin = async () => {
     try {
-      console.log("LOGIN DATA:", form); // ✅ debug
-
       const res = await loginUser(form);
-
       localStorage.setItem("token", res.data.access);
-
       onClose();
-
-      // ✅ redirect
       window.location.href = "/builder";
-    } catch (err) {
-      console.log("LOGIN ERROR:", err.response?.data);
+    } catch {
       alert("Invalid username or password ❌");
     }
   };
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white p-8 rounded-2xl w-full max-w-md shadow-lg relative">
+      <div className="w-full max-w-[900px] h-[550px] bg-white rounded-2xl shadow-xl flex overflow-hidden">
 
-        {/* CLOSE BUTTON */}
-        <button
-          onClick={onClose}
-          className="absolute top-3 right-3 text-gray-500 hover:text-black"
-        >
-          ✕
-        </button>
+        {/* LEFT FORM */}
+        <div className="w-full md:w-1/2 p-10 flex flex-col justify-center">
 
-        <h2 className="text-2xl font-bold mb-2 text-center">
-          Welcome <span className="text-primary">Back</span>
-        </h2>
+          <h2 className="text-3xl font-bold mb-2">
+            Welcome <span className="text-primary">Back</span>
+          </h2>
 
-        <p className="text-sm text-center mb-4 text-gray-500">
-          Sign in to continue building your resume
-        </p>
-
-        {/* ✅ FORM */}
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleLogin();
-          }}
-        >
-          {/* USERNAME */}
-          <input
-            type="text"
-            placeholder="Username"
-            autoComplete="username"
-            onChange={(e) =>
-              setForm({ ...form, username: e.target.value })
-            }
-            className="w-full border p-2 mb-3 rounded focus:ring-2 focus:ring-primary"
-          />
-
-          {/* PASSWORD */}
-          <input
-            type="password"
-            placeholder="Password"
-            autoComplete="current-password"
-            onChange={(e) =>
-              setForm({ ...form, password: e.target.value })
-            }
-            className="w-full border p-2 mb-2 rounded focus:ring-2 focus:ring-primary"
-          />
-
-          <p className="text-right text-sm text-primary cursor-pointer mb-3">
-            Forgot Password?
+          <p className="text-gray-500 mb-6">
+            Sign in to continue building your resume
           </p>
 
-          <button
-            type="submit"
-            className="w-full bg-primary text-white py-2 rounded mb-3 hover:opacity-90"
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleLogin();
+            }}
+            className="space-y-4"
           >
-            Log In
-          </button>
-        </form>
-
-        <p className="text-center text-gray-400 mb-3">or</p>
-
-        {/* ✅ GOOGLE LOGIN */}
-        <GoogleLogin
-          onSuccess={async (credentialResponse) => {
-            try {
-              const res = await axios.post(
-                "https://internship-4-ai-resume-5.onrender.com/api/auth/google/",
-                {
-                  token: credentialResponse.credential,
+            {/* EMAIL */}
+            <div>
+              <label className="text-sm">Email Address</label>
+              <input
+                type="text"
+                placeholder="Enter Email Id"
+                className="w-full mt-1 p-3 rounded-lg bg-gray-100 outline-none text-sm focus:ring-2 focus:ring-primary"
+                onChange={(e) =>
+                  setForm({ ...form, username: e.target.value })
                 }
-              );
+              />
+            </div>
 
-              localStorage.setItem("token", res.data.access);
+            {/* PASSWORD */}
+            <div>
+              <label className="text-sm">Password</label>
+              <input
+                type="password"
+                placeholder="Enter Password"
+                className="w-full mt-1 p-3 rounded-lg bg-gray-100 outline-none text-sm focus:ring-2 focus:ring-primary"
+                onChange={(e) =>
+                  setForm({ ...form, password: e.target.value })
+                }
+              />
+            </div>
 
-              onClose();
-              window.location.href = "/builder";
-            } catch (err) {
-              console.log("GOOGLE ERROR:", err.response?.data);
-              alert("Google Login Failed ❌");
-            }
-          }}
-          onError={() => {
-            alert("Google Login Failed ❌");
-          }}
-        />
+            <p className="text-right text-sm text-primary cursor-pointer">
+              Forgot Password?
+            </p>
 
-        {/* LINKEDIN */}
-        <button className="w-full border py-2 rounded mt-3 hover:bg-gray-50">
-          🔗 LinkedIn
-        </button>
+            <button className="w-full py-3 rounded-lg text-white bg-gradient-to-r from-[#7b5cff] to-[#6C3BFF]">
+              Log In
+            </button>
+          </form>
 
-        {/* SWITCH */}
-        <p className="text-sm text-center mt-4">
-          Don’t have an account?{" "}
-          <span
-            onClick={openRegister}
-            className="text-primary cursor-pointer"
+          <div className="text-center my-4 text-gray-400">or</div>
+
+          <div className="flex gap-3">
+            <div className="flex-1 border py-2 rounded-lg flex justify-center">
+              <GoogleLogin
+                onSuccess={async (res) => {
+                  const r = await axios.post(
+                    "https://internship-4-ai-resume-5.onrender.com/api/auth/google/",
+                    { token: res.credential }
+                  );
+                  localStorage.setItem("token", r.data.access);
+                  onClose();
+                  window.location.href = "/builder";
+                }}
+              />
+            </div>
+
+            <button className="flex-1 border py-2 rounded-lg hover:bg-gray-50">
+              LinkedIn
+            </button>
+          </div>
+
+          <p className="text-sm text-gray-500 mt-4">
+            Don’t have an account?{" "}
+            <span
+              onClick={openRegister}
+              className="text-primary cursor-pointer"
+            >
+              Sign up for free
+            </span>
+          </p>
+        </div>
+
+        {/* RIGHT SIDE (DESIGN) */}
+        <div className="hidden md:flex w-1/2 bg-gradient-to-br from-[#7b5cff] to-[#6C3BFF] items-center justify-center relative">
+
+          <img
+            src="/auth-illustration.png"
+            alt=""
+            className="w-72 opacity-90"
+          />
+
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 bg-white/90 rounded-full w-9 h-9 flex items-center justify-center shadow"
           >
-            Register
-          </span>
-        </p>
+            ✕
+          </button>
+        </div>
+
       </div>
     </div>
   );
