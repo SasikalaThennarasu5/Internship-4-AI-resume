@@ -36,10 +36,11 @@ export default function HowItWorks() {
           >
             {/* ICON */}
             <img
-              src={step.icon}
-              className="w-14 h-14 mb-4"
-              alt=""
-            />
+  src={step.icon || "/default-icon.png"}
+  onError={(e) => (e.target.src = "/default-icon.png")}
+  className="w-14 h-14 mb-4"
+  alt=""
+/>
 
             <div className="absolute top-0 right-0 w-16 h-16 bg-secondary rounded-bl-full"></div>
 

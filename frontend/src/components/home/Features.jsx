@@ -35,10 +35,11 @@ export default function Features() {
             className="relative bg-white p-6 rounded-2xl shadow-md text-left"
           >
             <img
-              src={f.icon}
-              className="absolute -top-6 left-6 w-14 h-14 rounded-full"
-              alt=""
-            />
+  src={f.icon || "/default-icon.png"}
+  onError={(e) => (e.target.src = "/default-icon.png")}
+  className="absolute -top-6 left-6 w-14 h-14 rounded-full"
+  alt=""
+/>
 
             <div className="mt-10">
               <h3 className="font-semibold text-lg mb-2">

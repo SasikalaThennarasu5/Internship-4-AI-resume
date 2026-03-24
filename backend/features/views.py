@@ -6,5 +6,9 @@ from .serializer import FeatureSerializer
 class FeatureListView(APIView):
     def get(self, request):
         features = Feature.objects.all()
-        serializer = FeatureSerializer(features, many=True)
+        serializer = FeatureSerializer(
+            features, 
+            many=True, 
+            context={'request': request}   # 🔥 IMPORTANT
+        )
         return Response(serializer.data)
