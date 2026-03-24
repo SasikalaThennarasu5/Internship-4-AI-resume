@@ -65,10 +65,10 @@ export default function Templates() {
 
             {/* IMAGE */}
             <img
-              src={t.image}
-              alt={t.name}
-              className="rounded-lg h-64 w-full object-cover"
-            />
+  src={t.image || "/default-template.png"}
+  onError={(e) => (e.target.src = "/default-template.png")}
+  className="rounded-lg h-64 w-full object-cover"
+/>
 
             {/* NAME */}
             <h2 className="font-semibold mt-4">{t.name}</h2>

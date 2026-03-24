@@ -44,10 +44,11 @@ export default function TemplatesPreview() {
 
             {/* IMAGE */}
             <img
-              src={`https://internship-4-ai-resume-5.onrender.com${t.image}`}
-              alt={t.name}
-              className="rounded-lg h-72 w-full object-cover"
-            />
+  src={t.image}
+  onError={(e) => (e.target.src = "/default-template.png")}
+  alt={t.name}
+  className="rounded-lg h-72 w-full object-cover"
+/>
 
             {/* NAME */}
             <h3 className="mt-3 font-semibold">{t.name}</h3>

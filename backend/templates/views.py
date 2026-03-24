@@ -13,7 +13,11 @@ class TemplateListView(APIView):
         else:
             templates = Template.objects.all()
 
-        serializer = TemplateSerializer(templates, many=True)
+        serializer = TemplateSerializer(
+            templates,
+            many=True,
+            context={'request': request}   # 🔥 MUST
+        )
         return Response(serializer.data)
     
 class TemplatePreviewView(ListAPIView):
@@ -21,3 +25,6 @@ class TemplatePreviewView(ListAPIView):
 
     def get_queryset(self):
         return Template.objects.all()[:3]
+
+    def get_serializer_context(self):
+        return {'request': self.request}
