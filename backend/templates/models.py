@@ -9,7 +9,7 @@ class Template(models.Model):
     )
 
     name = models.CharField(max_length=100)
-    image = models.ImageField(upload_to='templates/')
+    image = models.ImageField(upload_to='templates/', null=True, blank=True)
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
     is_pro = models.BooleanField(default=False)
 
