@@ -5,20 +5,22 @@ import axios from "axios";
 
 export default function Login({ onClose, openRegister }) {
   const [form, setForm] = useState({
-    username: "",
+    email: "",
     password: "",
   });
 
   const handleLogin = async () => {
-    try {
-      const res = await loginUser(form);
-      localStorage.setItem("token", res.data.access);
-      onClose();
-      window.location.href = "/builder";
-    } catch {
-      alert("Invalid username or password ❌");
-    }
-  };
+  try {
+    const res = await loginUser(form);
+
+    localStorage.setItem("token", res.data.access);
+    onClose();
+    window.location.href = "/builder";
+
+  } catch {
+    alert("Invalid email or password ❌");
+  }
+};
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -46,13 +48,13 @@ export default function Login({ onClose, openRegister }) {
             <div>
               <label className="text-sm">Email Address</label>
               <input
-                type="text"
-                placeholder="Enter Email Id"
-                className="w-full mt-1 p-3 rounded-lg bg-gray-100 outline-none text-sm focus:ring-2 focus:ring-primary"
-                onChange={(e) =>
-                  setForm({ ...form, username: e.target.value })
-                }
-              />
+  type="email"
+  placeholder="Enter Email Id"
+  className="w-full mt-1 p-3 rounded-lg bg-gray-100 outline-none text-sm focus:ring-2 focus:ring-primary"
+  onChange={(e) =>
+    setForm({ ...form, email: e.target.value })
+  }
+/>
             </div>
 
             {/* PASSWORD */}
