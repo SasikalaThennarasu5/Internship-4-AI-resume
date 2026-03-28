@@ -7,6 +7,9 @@ import BuilderLayout from "../pages/builder/BuilderLayout";
 import ResumeBuilder from "../pages/ResumeBuilder";
 import Login from "../pages/Login";
 import Checkout from "../pages/Checkout";
+import ForgotPassword from "../pages/ForgotPassword";
+import ResetPassword from "../pages/ResetPassword";
+
 
 
 function AppRoutes() {
@@ -21,6 +24,8 @@ function AppRoutes() {
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/login" element={<Login />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
         </Route>
 
         {/* BUILDER (SEPARATE LAYOUT) */}

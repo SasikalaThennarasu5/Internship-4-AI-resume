@@ -2,6 +2,8 @@ import { useState } from "react";
 import { loginUser } from "../api/authApi";
 import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function Login({ onClose, openRegister }) {
   const [form, setForm] = useState({
@@ -9,24 +11,25 @@ export default function Login({ onClose, openRegister }) {
     password: "",
   });
 
+  const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+
   const handleLogin = async () => {
-  try {
-    const res = await loginUser(form);
-
-    localStorage.setItem("token", res.data.access);
-    onClose();
-    window.location.href = "/builder";
-
-  } catch {
-    alert("Invalid email or password ❌");
-  }
-};
+    try {
+      const res = await loginUser(form);
+      localStorage.setItem("token", res.data.access);
+      onClose();
+      window.location.href = "/builder";
+    } catch {
+      alert("Invalid email or password ❌");
+    }
+  };
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="w-full max-w-[900px] h-[550px] bg-white rounded-2xl shadow-xl flex overflow-hidden">
 
-        {/* LEFT FORM */}
+        {/* LEFT */}
         <div className="w-full md:w-1/2 p-10 flex flex-col justify-center">
 
           <h2 className="text-3xl font-bold mb-2">
@@ -48,31 +51,49 @@ export default function Login({ onClose, openRegister }) {
             <div>
               <label className="text-sm">Email Address</label>
               <input
-  type="email"
-  placeholder="Enter Email Id"
-  className="w-full mt-1 p-3 rounded-lg bg-gray-100 outline-none text-sm focus:ring-2 focus:ring-primary"
-  onChange={(e) =>
-    setForm({ ...form, email: e.target.value })
-  }
-/>
+                type="email"
+                placeholder="Enter Email Id"
+                className="w-full mt-1 p-3 rounded-lg bg-gray-100 outline-none text-sm focus:ring-2 focus:ring-primary"
+                onChange={(e) =>
+                  setForm({ ...form, email: e.target.value })
+                }
+              />
             </div>
 
             {/* PASSWORD */}
             <div>
               <label className="text-sm">Password</label>
-              <input
-                type="password"
-                placeholder="Enter Password"
-                className="w-full mt-1 p-3 rounded-lg bg-gray-100 outline-none text-sm focus:ring-2 focus:ring-primary"
-                onChange={(e) =>
-                  setForm({ ...form, password: e.target.value })
-                }
-              />
+
+              <div className="relative">
+  <input
+    type={showPassword ? "text" : "password"}
+    placeholder="Enter Password"
+    className="w-full mt-1 p-3 pr-10 rounded-lg bg-gray-100 outline-none text-sm focus:ring-2 focus:ring-primary"
+    onChange={(e) =>
+      setForm({ ...form, password: e.target.value })
+    }
+  />
+
+  <button
+    type="button"
+    onClick={() => setShowPassword(!showPassword)}
+    className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-500 hover:text-gray-700"
+  >
+    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+  </button>
+</div>
             </div>
 
-            <p className="text-right text-sm text-primary cursor-pointer">
-              Forgot Password?
-            </p>
+            {/* FORGOT PASSWORD */}
+            <p
+  onClick={() => {
+    onClose();           // ✅ close modal first
+    navigate("/forgot-password"); // ✅ then navigate
+  }}
+  className="text-right text-sm text-primary cursor-pointer"
+>
+  Forgot Password?
+</p>
 
             <button className="w-full py-3 rounded-lg text-white bg-gradient-to-r from-[#7b5cff] to-[#6C3BFF]">
               Log In
@@ -81,8 +102,10 @@ export default function Login({ onClose, openRegister }) {
 
           <div className="text-center my-4 text-gray-400">or</div>
 
-          <div className="flex gap-3">
-            <div className="flex-1 border py-2 rounded-lg flex justify-center">
+          {/* SOCIAL LOGIN */}
+          <div className="flex flex-col gap-3">
+
+            <div className="border py-2 rounded-lg flex justify-center overflow-hidden">
               <GoogleLogin
                 onSuccess={async (res) => {
                   const r = await axios.post(
@@ -96,9 +119,8 @@ export default function Login({ onClose, openRegister }) {
               />
             </div>
 
-            <button className="flex-1 border py-2 rounded-lg hover:bg-gray-50">
-              LinkedIn
-            </button>
+            
+
           </div>
 
           <p className="text-sm text-gray-500 mt-4">
@@ -112,14 +134,20 @@ export default function Login({ onClose, openRegister }) {
           </p>
         </div>
 
-        {/* RIGHT SIDE (DESIGN) */}
-        <div className="hidden md:flex w-1/2 bg-gradient-to-br from-[#7b5cff] to-[#6C3BFF] items-center justify-center relative">
+        {/* RIGHT */}
+        <div
+  className="hidden md:flex w-1/2 relative"
+  style={{
+    backgroundImage: "url('/auth-illustration.png')",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+  }}
+>
 
-          <img
-            src="/auth-illustration.png"
-            alt=""
-            className="w-72 opacity-90"
-          />
+  {/* Optional overlay (for premium look) */}
+  
+
+
 
           <button
             onClick={onClose}
