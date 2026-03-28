@@ -1,3 +1,5 @@
+import { NavLink } from "react-router-dom";
+
 function Footer() {
   return (
     <footer className="bg-gradient-to-r from-[#6C3BFF] to-[#7b5cff] text-white px-12 py-14 mt-16">
@@ -21,10 +23,31 @@ function Footer() {
         <div>
           <h3 className="font-semibold mb-4 text-lg">Product</h3>
           <ul className="space-y-2 text-sm text-white/80">
-            <li className="hover:text-white cursor-pointer">Resume Builder</li>
-            <li className="hover:text-white cursor-pointer">Resume Templates</li>
-            <li className="hover:text-white cursor-pointer">AI Content Suggestions</li>
-            <li className="hover:text-white cursor-pointer">Pricing</li>
+
+            <li>
+              <NavLink to="/builder" className="hover:text-white">
+                Resume Builder
+              </NavLink>
+            </li>
+
+            <li>
+              <NavLink to="/templates" className="hover:text-white">
+                Resume Templates
+              </NavLink>
+            </li>
+
+            <li>
+              <NavLink to="/builder" className="hover:text-white">
+                AI Content Suggestions
+              </NavLink>
+            </li>
+
+            <li>
+              <NavLink to="/pricing" className="hover:text-white">
+                Pricing
+              </NavLink>
+            </li>
+
           </ul>
         </div>
 
@@ -32,8 +55,19 @@ function Footer() {
         <div>
           <h3 className="font-semibold mb-4 text-lg">Support</h3>
           <ul className="space-y-2 text-sm text-white/80">
-            <li className="hover:text-white cursor-pointer">Help Center</li>
-            <li className="hover:text-white cursor-pointer">Privacy Policy</li>
+
+            <li>
+              <NavLink to="/help" className="hover:text-white">
+                Help Center
+              </NavLink>
+            </li>
+
+            <li>
+              <NavLink to="/privacy" className="hover:text-white">
+                Privacy Policy
+              </NavLink>
+            </li>
+
           </ul>
         </div>
 

@@ -1,9 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { getPlans } from "../api/pricingApi";
+import { useNavigate } from "react-router-dom";
 
 export default function Pricing() {
   const [yearly, setYearly] = useState(false);
   const [plans, setPlans] = useState([]);
+  const navigate = useNavigate();
+  const plansRef = useRef(null);
 
   useEffect(() => {
     const fetchPlans = async () => {
@@ -68,6 +71,7 @@ export default function Pricing() {
             button,
             highlight,
             icon,
+            raw: plan, // ✅ keep original plan
           };
         });
 
@@ -80,6 +84,17 @@ export default function Pricing() {
     fetchPlans();
   }, [yearly]);
 
+  // ✅ PLAN CLICK
+  const handleSelectPlan = (plan) => {
+    navigate("/checkout", {
+      state: {
+        planName: plan.name,
+        billing: yearly ? "yearly" : "monthly",
+        price: plan.price,
+      },
+    });
+  };
+
   return (
     <div className="bg-background min-h-screen py-20 px-6 text-center">
 
@@ -89,7 +104,7 @@ export default function Pricing() {
       </h1>
 
       <p className="text-gray-500 mb-10 text-sm">
-        Choose the plan that's right for you. All plans include a free trial.
+        Choose the plan that's right for you.
       </p>
 
       {/* TOGGLE */}
@@ -115,8 +130,10 @@ export default function Pricing() {
       </div>
 
       {/* PLANS */}
-      <div className="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto">
-
+      <div
+        ref={plansRef}
+        className="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto"
+      >
         {plans.map((plan, i) => (
           <div
             key={i}
@@ -128,13 +145,7 @@ export default function Pricing() {
           >
             {/* ICON */}
             <div className="flex justify-center mb-4">
-              <div className="bg-white p-2 rounded-full shadow-md">
-                <img
-                  src={plan.icon}
-                  className="w-12 h-12 object-contain"
-                  alt=""
-                />
-              </div>
+              <img src={plan.icon} className="w-12 h-12" alt="" />
             </div>
 
             {/* NAME */}
@@ -152,6 +163,7 @@ export default function Pricing() {
 
             {/* BUTTON */}
             <button
+              onClick={() => handleSelectPlan(plan)}
               className={`w-full py-2 rounded mb-6 font-medium transition ${
                 plan.highlight
                   ? "bg-orange-400 text-white hover:bg-orange-500 shadow-lg"
@@ -174,83 +186,96 @@ export default function Pricing() {
       </div>
 
       {/* COMPARE TABLE */}
-      <div className="mt-20 max-w-5xl mx-auto bg-white p-8 rounded-2xl shadow text-left">
+<div className="mt-20 max-w-5xl mx-auto bg-white p-8 rounded-2xl shadow text-left">
 
-        <h2 className="text-2xl font-bold text-center mb-6">
-          Compare <span className="text-primary">All Features</span>
-        </h2>
+  {/* TITLE */}
+  <h2 className="text-2xl font-bold text-center mb-6">
+    Compare <span className="text-primary">All Features</span>
+  </h2>
 
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="text-gray-500">
-              <th className="text-left py-2">Feature</th>
-              <th>Free</th>
-              <th>Pro</th>
-              <th>Premium</th>
-            </tr>
-          </thead>
+  {/* TABLE */}
+  <table className="w-full text-sm border-collapse">
 
-          <tbody className="text-center">
-            <tr>
-              <td className="text-left py-2">Number of Resumes</td>
-              <td>1</td>
-              <td>Unlimited</td>
-              <td>Unlimited</td>
-            </tr>
-            <tr>
-              <td className="text-left py-2">Templates</td>
-              <td>3 Basic</td>
-              <td>All Premium</td>
-              <td>All Premium</td>
-            </tr>
-            <tr>
-              <td className="text-left py-2">AI Suggestions</td>
-              <td>✔</td>
-              <td>✔</td>
-              <td>✔</td>
-            </tr>
-            <tr>
-              <td className="text-left py-2">Cover Letter</td>
-              <td>-</td>
-              <td>✔</td>
-              <td>✔</td>
-            </tr>
-            <tr>
-              <td className="text-left py-2">Career Coaching</td>
-              <td>-</td>
-              <td>-</td>
-              <td>✔</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+    {/* TABLE HEAD */}
+    <thead>
+      <tr className="text-gray-500 border-b">
+        <th className="text-left py-3">Feature</th>
+        <th className="py-3">Free</th>
+        <th className="py-3">Pro</th>
+        <th className="py-3">Premium</th>
+      </tr>
+    </thead>
 
-      {/* CTA SECTION */}
-      <div className="mt-20 max-w-5xl mx-auto bg-gradient-to-r from-primary to-purple-600 text-white rounded-2xl p-10 flex flex-col md:flex-row items-center justify-between relative overflow-hidden">
+    {/* TABLE BODY */}
+    <tbody className="text-center">
 
-        {/* LEFT IMAGE */}
-        <img
-          src="/images/girl.png"
-          className="w-40 md:w-56 mb-6 md:mb-0"
-          alt=""
-        />
+      <tr className="border-b">
+        <td className="text-left py-3">Number of Resumes</td>
+        <td>1</td>
+        <td>Unlimited</td>
+        <td>Unlimited</td>
+      </tr>
 
-        {/* TEXT */}
+      <tr className="border-b">
+        <td className="text-left py-3">Templates</td>
+        <td>3 Basic</td>
+        <td>All Premium</td>
+        <td>All Premium</td>
+      </tr>
+
+      <tr className="border-b">
+        <td className="text-left py-3">AI Suggestions</td>
+        <td>✔</td>
+        <td>✔</td>
+        <td>✔</td>
+      </tr>
+
+      <tr className="border-b">
+        <td className="text-left py-3">Cover Letter</td>
+        <td>-</td>
+        <td>✔</td>
+        <td>✔</td>
+      </tr>
+
+      <tr>
+        <td className="text-left py-3">Career Coaching</td>
+        <td>-</td>
+        <td>-</td>
+        <td>✔</td>
+      </tr>
+
+    </tbody>
+  </table>
+
+</div>
+
+      {/* CTA */}
+      <div className="mt-20 max-w-5xl mx-auto bg-gradient-to-r from-primary to-purple-600 text-white rounded-2xl p-10 flex flex-col md:flex-row items-center justify-between">
+
+        <img src="/images/girl.png" className="w-40 md:w-56 mb-6 md:mb-0" alt="" />
+
         <div className="text-center md:text-left">
           <h2 className="text-2xl font-bold mb-2">
             Start Building Your Professional Resume Today
           </h2>
-          <p className="text-sm opacity-90">
-            Choose the plan that fits your needs and create a job-winning resume.
-          </p>
         </div>
 
-        {/* BUTTONS */}
         <div className="flex gap-4 mt-6 md:mt-0">
-          <button className="bg-white text-primary px-6 py-2 rounded shadow hover:scale-105 transition">
+          {/* ✅ START FREE */}
+          <button
+            onClick={() => navigate("/builder")}
+            className="bg-white text-primary px-6 py-2 rounded shadow hover:scale-105 transition"
+          >
             Start Free
           </button>
-          <button className="bg-orange-400 px-6 py-2 rounded shadow hover:bg-orange-500 transition">
+
+          {/* ✅ VIEW PLANS */}
+          <button
+            onClick={() =>
+              plansRef.current.scrollIntoView({ behavior: "smooth" })
+            }
+            className="bg-orange-400 px-6 py-2 rounded shadow hover:bg-orange-500 transition"
+          >
             View Plans
           </button>
         </div>

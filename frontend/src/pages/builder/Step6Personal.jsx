@@ -8,7 +8,9 @@ export default function Step6Personal({ next, back, updateData, data }) {
     summary: "",
   });
 
-  // ✅ Prefill when coming back
+  const [errors, setErrors] = useState({});
+
+  // ✅ Prefill
   useEffect(() => {
     if (data) {
       setForm({
@@ -20,7 +22,46 @@ export default function Step6Personal({ next, back, updateData, data }) {
     }
   }, [data]);
 
-  // ✅ Smart AI-like summary (NO API)
+  // ✅ VALIDATION
+  const validate = () => {
+    let newErrors = {};
+
+    if (!form.name.trim()) {
+      newErrors.name = "Name is required";
+    }
+
+    if (!form.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/^\S+@\S+\.\S+$/.test(form.email)) {
+      newErrors.email = "Enter a valid email address";
+    }
+
+    if (!form.phone.trim()) {
+      newErrors.phone = "Phone number is required";
+    } else if (!/^[0-9]{10}$/.test(form.phone)) {
+      newErrors.phone = "Enter a valid 10-digit phone number";
+    }
+
+    if (!form.summary.trim()) {
+      newErrors.summary = "Summary is required";
+    }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  };
+
+  // ✅ HANDLE CHANGE + CLEAR ERROR
+  const handleChange = (field, value) => {
+    setForm({ ...form, [field]: value });
+
+    setErrors((prev) => ({
+      ...prev,
+      [field]: "",
+    }));
+  };
+
+  // ✅ AI SUMMARY
   const generateSummary = () => {
     const role = data?.role || "professional";
     const skills = data?.skills?.join(", ") || "modern technologies";
@@ -28,6 +69,9 @@ export default function Step6Personal({ next, back, updateData, data }) {
     const generated = `Motivated ${role} with strong skills in ${skills}. Passionate about problem-solving and building efficient solutions. Looking to contribute and grow in a dynamic work environment.`;
 
     setForm({ ...form, summary: generated });
+
+    // clear summary error
+    setErrors((prev) => ({ ...prev, summary: "" }));
   };
 
   return (
@@ -55,46 +99,87 @@ export default function Step6Personal({ next, back, updateData, data }) {
           Personal Details
         </h2>
 
+        {/* TOP ERROR */}
+        {Object.keys(errors).length > 0 && (
+          <p className="text-red-600 text-center mb-4">
+            Please fill all required fields correctly
+          </p>
+        )}
+
         {/* FORM */}
         <div className="grid md:grid-cols-2 gap-6">
 
-          <input
-            placeholder="Name"
-            value={form.name}
-            onChange={(e) =>
-              setForm({ ...form, name: e.target.value })
-            }
-            className="p-3 bg-gray-100 rounded"
-          />
+          {/* NAME */}
+          <div>
+            <input
+              placeholder="Name"
+              value={form.name}
+              onChange={(e) => handleChange("name", e.target.value)}
+              className={`p-3 w-full rounded ${
+                errors.name
+                  ? "bg-red-50 border border-red-400"
+                  : "bg-gray-100"
+              }`}
+            />
+            {errors.name && (
+              <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+            )}
+          </div>
 
-          <input
-            placeholder="Email"
-            value={form.email}
-            onChange={(e) =>
-              setForm({ ...form, email: e.target.value })
-            }
-            className="p-3 bg-gray-100 rounded"
-          />
+          {/* EMAIL */}
+          <div>
+            <input
+              placeholder="Email"
+              value={form.email}
+              onChange={(e) => handleChange("email", e.target.value)}
+              className={`p-3 w-full rounded ${
+                errors.email
+                  ? "bg-red-50 border border-red-400"
+                  : "bg-gray-100"
+              }`}
+            />
+            {errors.email && (
+              <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+            )}
+          </div>
 
-          <input
-            placeholder="Phone"
-            value={form.phone}
-            onChange={(e) =>
-              setForm({ ...form, phone: e.target.value })
-            }
-            className="p-3 bg-gray-100 rounded"
-          />
+          {/* PHONE */}
+          <div>
+            <input
+              placeholder="Phone"
+              value={form.phone}
+              onChange={(e) => handleChange("phone", e.target.value)}
+              className={`p-3 w-full rounded ${
+                errors.phone
+                  ? "bg-red-50 border border-red-400"
+                  : "bg-gray-100"
+              }`}
+            />
+            {errors.phone && (
+              <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
+            )}
+          </div>
+
         </div>
 
         {/* SUMMARY */}
-        <textarea
-          placeholder="Profile Summary"
-          value={form.summary}
-          onChange={(e) =>
-            setForm({ ...form, summary: e.target.value })
-          }
-          className="w-full mt-6 p-3 bg-gray-100 rounded"
-        />
+        <div className="mt-6">
+          <textarea
+            placeholder="Profile Summary"
+            value={form.summary}
+            onChange={(e) => handleChange("summary", e.target.value)}
+            className={`w-full p-3 rounded ${
+              errors.summary
+                ? "bg-red-50 border border-red-400"
+                : "bg-gray-100"
+            }`}
+          />
+          {errors.summary && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.summary}
+            </p>
+          )}
+        </div>
 
         <button
           onClick={generateSummary}
@@ -104,26 +189,29 @@ export default function Step6Personal({ next, back, updateData, data }) {
         </button>
 
         {/* BUTTONS */}
-        <div className="flex justify-between mt-8">
+        <div className="flex justify-between mt-8 gap-4">
 
-          <button onClick={back} className="px-6 py-2 border rounded">
+          <button onClick={back} className="flex-1 py-2 border rounded">
             Back
           </button>
 
-          <button className="px-6 py-2 border rounded">
+          <button className="flex-1 py-2 border rounded">
             💾 Save as draft
           </button>
 
           <button
             onClick={() => {
-              updateData(form);
-              next();
+              if (validate()) {
+                updateData(form);
+                next();
+              }
             }}
-            className="px-8 py-2 bg-orange-500 text-white rounded"
+            className="flex-1 py-2 bg-orange-500 text-white rounded"
           >
             Next
           </button>
         </div>
+
       </div>
     </div>
   );

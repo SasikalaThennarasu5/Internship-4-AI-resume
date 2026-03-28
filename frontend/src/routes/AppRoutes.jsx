@@ -6,6 +6,8 @@ import Pricing from "../pages/Pricing";
 import BuilderLayout from "../pages/builder/BuilderLayout";
 import ResumeBuilder from "../pages/ResumeBuilder";
 import Login from "../pages/Login";
+import Checkout from "../pages/Checkout";
+
 
 function AppRoutes() {
   return (
@@ -18,6 +20,7 @@ function AppRoutes() {
           <Route path="/templates" element={<Templates />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/checkout" element={<Checkout />} />
         </Route>
 
         {/* BUILDER (SEPARATE LAYOUT) */}

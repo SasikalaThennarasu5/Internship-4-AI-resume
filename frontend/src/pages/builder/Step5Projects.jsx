@@ -1,25 +1,72 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-export default function Step5Projects({ next, back, updateData }) {
-  const [answer, setAnswer] = useState("yes");
+export default function Step5Projects({ next, back, updateData, data }) {
 
-  const [projects, setProjects] = useState([
-    { title: "", tools: "", description: "" }
-  ]);
+  // ✅ Prefill YES/NO based on existing data
+  const [answer, setAnswer] = useState(
+    data?.projects?.length ? "yes" : "no"
+  );
 
-  // Handle input change
+  // ✅ Prefill projects
+  const [projects, setProjects] = useState(
+    data?.projects?.length
+      ? data.projects
+      : [{ title: "", tools: "", description: "" }]
+  );
+
+  const [errors, setErrors] = useState([]);
+
+  // ✅ Sync when editing
+  useEffect(() => {
+    if (data?.projects?.length) {
+      setAnswer("yes");
+      setProjects(data.projects);
+    }
+  }, [data]);
+
+  // ✅ Handle change + clear error
   const handleChange = (index, field, value) => {
     const updated = [...projects];
     updated[index][field] = value;
     setProjects(updated);
+
+    const updatedErrors = [...errors];
+    if (updatedErrors[index]) {
+      delete updatedErrors[index][field];
+    }
+    setErrors(updatedErrors);
   };
 
-  // Add new project
+  // ✅ Add project
   const addProject = () => {
     setProjects([
       ...projects,
       { title: "", tools: "", description: "" }
     ]);
+
+    setErrors([...errors, {}]);
+  };
+
+  // ✅ VALIDATION
+  const validate = () => {
+    if (answer === "no") return true;
+
+    let newErrors = [];
+
+    projects.forEach((proj, index) => {
+      let err = {};
+
+      if (!proj.title.trim()) err.title = "Project title is required";
+      if (!proj.tools.trim()) err.tools = "Tools are required";
+      if (!proj.description.trim())
+        err.description = "Description is required";
+
+      newErrors[index] = err;
+    });
+
+    setErrors(newErrors);
+
+    return newErrors.every((err) => Object.keys(err).length === 0);
   };
 
   return (
@@ -44,6 +91,11 @@ export default function Step5Projects({ next, back, updateData }) {
         <div className="w-[70%] h-2 bg-primary rounded-full"></div>
       </div>
 
+      {/* ✅ CLEAR QUESTION */}
+      <h2 className="text-lg font-semibold mb-4 text-center">
+        Do you want to add projects?
+      </h2>
+
       {/* YES / NO */}
       <div className="flex justify-center gap-8 mb-10">
         {["yes", "no"].map((val) => (
@@ -65,6 +117,13 @@ export default function Step5Projects({ next, back, updateData }) {
       {answer === "yes" && (
         <div className="bg-white w-full max-w-3xl p-6 rounded-xl shadow space-y-6">
 
+          {/* TOP ERROR */}
+          {errors.some((e) => Object.keys(e || {}).length > 0) && (
+            <p className="text-red-600 text-center">
+              Please fill all project details
+            </p>
+          )}
+
           {projects.map((proj, index) => (
             <div key={index} className="border-b pb-4">
 
@@ -73,33 +132,72 @@ export default function Step5Projects({ next, back, updateData }) {
               </h3>
 
               <div className="grid grid-cols-2 gap-4">
-                <input
-                  placeholder="Project Title"
-                  value={proj.title}
-                  onChange={(e) =>
-                    handleChange(index, "title", e.target.value)
-                  }
-                  className="p-2 bg-gray-100 rounded"
-                />
 
-                <input
-                  placeholder="Tools Used"
-                  value={proj.tools}
-                  onChange={(e) =>
-                    handleChange(index, "tools", e.target.value)
-                  }
-                  className="p-2 bg-gray-100 rounded"
-                />
+                {/* TITLE */}
+                <div>
+                  <input
+                    placeholder="Project Title"
+                    value={proj.title}
+                    onChange={(e) =>
+                      handleChange(index, "title", e.target.value)
+                    }
+                    className={`p-2 w-full rounded ${
+                      errors[index]?.title
+                        ? "bg-red-50 border border-red-400"
+                        : "bg-gray-100"
+                    }`}
+                  />
+                  {errors[index]?.title && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors[index].title}
+                    </p>
+                  )}
+                </div>
+
+                {/* TOOLS */}
+                <div>
+                  <input
+                    placeholder="Tools Used"
+                    value={proj.tools}
+                    onChange={(e) =>
+                      handleChange(index, "tools", e.target.value)
+                    }
+                    className={`p-2 w-full rounded ${
+                      errors[index]?.tools
+                        ? "bg-red-50 border border-red-400"
+                        : "bg-gray-100"
+                    }`}
+                  />
+                  {errors[index]?.tools && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors[index].tools}
+                    </p>
+                  )}
+                </div>
+
               </div>
 
-              <textarea
-                placeholder="Project Description"
-                value={proj.description}
-                onChange={(e) =>
-                  handleChange(index, "description", e.target.value)
-                }
-                className="w-full mt-3 p-2 bg-gray-100 rounded"
-              />
+              {/* DESCRIPTION */}
+              <div className="mt-3">
+                <textarea
+                  placeholder="Project Description"
+                  value={proj.description}
+                  onChange={(e) =>
+                    handleChange(index, "description", e.target.value)
+                  }
+                  className={`w-full p-2 rounded ${
+                    errors[index]?.description
+                      ? "bg-red-50 border border-red-400"
+                      : "bg-gray-100"
+                  }`}
+                />
+                {errors[index]?.description && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors[index].description}
+                  </p>
+                )}
+              </div>
+
             </div>
           ))}
 
@@ -114,25 +212,27 @@ export default function Step5Projects({ next, back, updateData }) {
       )}
 
       {/* FOOTER */}
-      <div className="flex justify-between items-center mt-8 w-full max-w-3xl">
+      <div className="flex justify-between items-center mt-8 w-full max-w-3xl gap-4">
 
-        <button onClick={back} className="px-6 py-2 border rounded">
+        <button onClick={back} className="flex-1 py-2 border rounded">
           Back
         </button>
 
-        <button className="px-6 py-2 border rounded">
+        <button className="flex-1 py-2 border rounded">
           💾 Save as draft
         </button>
 
         <button
           onClick={() => {
-            updateData({
-              hasProjects: answer,
-              projects: answer === "yes" ? projects : []
-            });
-            next();
+            if (validate()) {
+              updateData({
+                hasProjects: answer,
+                projects: answer === "yes" ? projects : [],
+              });
+              next();
+            }
           }}
-          className="px-8 py-2 bg-orange-500 text-white rounded"
+          className="flex-1 py-2 bg-orange-500 text-white rounded"
         >
           Next
         </button>
